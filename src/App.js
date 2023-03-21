@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+// Import everything needed to use the `useQuery` hook
+import { useQuery, gql } from '@apollo/client';
 
-function App() {
+const GET_VEHICLES = gql`
+  query AllVehicles {
+    allVehicles {
+    vehicles {
+      id
+      model
+      costInCredits
+      passengers
+    }  
+    }
+  }
+  `
+
+function DisplayVehicles() {
+  const { loading, error, data } = useQuery(GET_VEHICLES);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error : {error.message}</p>;
+  //console.log(data)
+
+  return data.allVehicles.vehicles.map(({ id, model, costInCredits, passengers }) => (
+    <div key={id}>
+      <h3>Hello would you like to buy a {model}</h3>
+      <br />
+      <b>About this vehicle:</b>
+      <p>the price is ${costInCredits}</p>
+      <p>the capacity is {passengers} people</p>
+      <br />
+    </div>
+  ));
+}
+
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>My first Apollo app 🚀</h2>
+      <DisplayVehicles />
     </div>
   );
 }
-
-export default App;

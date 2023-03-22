@@ -1,5 +1,7 @@
 // Import everything needed to use the `useQuery` hook
+import React from "react";
 import { useQuery, gql } from '@apollo/client';
+import { Link } from 'react-router-dom';
 
 const GET_VEHICLES = gql`
   query AllVehicles {
@@ -28,6 +30,7 @@ function DisplayVehicles() {
       <b>About this vehicle:</b>
       <p>the price is ${costInCredits}</p>
       <p>the capacity is {passengers} people</p>
+      <p><Link to={`/vehicles/${id}`}>click here to see all the details</Link></p>
       <br />
     </div>
   ));

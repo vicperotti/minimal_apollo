@@ -2,6 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { List, ListItem, ListItemText } from "@mui/material";
 
 export const VehicleDetailPage = () => {
 
@@ -14,6 +15,13 @@ const GET_VEHICLE_DETAIL = gql`
       model
       costInCredits
       passengers
+      pilotConnection {
+        pilots {
+          id
+          name
+          homeworld  {name} 
+        }
+      }
     }  
   }
   `
@@ -27,6 +35,8 @@ const GET_VEHICLE_DETAIL = gql`
     if (loading) return "loading ....";
   
     const vehicle = data.vehicle;
+    const pilots = vehicle.pilotConnection.pilots;
+
     return (
         <div><h2>VehicleDetailPage</h2>
         Some details for you....
@@ -34,7 +44,17 @@ const GET_VEHICLE_DETAIL = gql`
         <h3>{vehicle.costInCredits}</h3>
         <h3>{vehicle.passengers}</h3>
 
-        <Link to="/">Back to the list!</Link>
+        {pilots.length>0 && <h2>Known Pilots</h2>}
+        <List>
+        {pilots.map((pilot, i) => (
+        <ListItem key={i}>
+          <ListItemText
+            primary={`Name: ${pilot.name}`}
+            secondary={`Homeworld: ${pilot.homeworld.name} miles`}
+          />
+        </ListItem>
+      ))}
+    </List>   <Link to="/">Back to the list!</Link>
         </div>
     )
 }
